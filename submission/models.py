@@ -20,6 +20,7 @@ class ProblemSubmission(models.Model):
                                    through='ProblemSubmissionCase')
     lectures = models.ManyToManyField(Lecture, blank=True, related_name='problem_submissions')
 
+
 class CaseStatus(models.Model):
     """测试案例通过情况"""
 
