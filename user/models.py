@@ -1,6 +1,6 @@
 from django.db import models
 from oj import settings
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, Group
 
 
 class UserStatus(models.Model):
@@ -11,6 +11,10 @@ class UserStatus(models.Model):
     @staticmethod
     def default():
         return 1
+
+
+class Permission(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
 
 class Gender(models.Model):
@@ -32,6 +36,12 @@ class User(AbstractUser):
     gender = models.ForeignKey(Gender, default=Gender.default, on_delete=models.SET_DEFAULT)
 
     USERNAME_FIELD = 'id'
+
+
+class Role(models.Model):
+    description = models.CharField(max_length=200)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, primary_key=True, default="")
+    permission = models.ManyToManyField(Permission)
 
 
 class Student(models.Model):
