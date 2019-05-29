@@ -1,11 +1,10 @@
 from rest_framework.permissions import BasePermission
 from django.contrib.auth.models import Group
-from .models import User, Permission
+from .models import Permission
 
 
-def getPermission(index):
-    # user = User.objects.create_user(username='用户名',password='密码',email='邮箱')
-    user = User.objects.get(id=4)
+def getPermission(request, index):
+    user = request.user
     groups = Group.objects.filter(user=user)
     permissionNeeded = Permission.objects.get(id=index)
     for group in groups:
