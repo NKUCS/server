@@ -47,6 +47,7 @@ class GetStudentListAPI(APIView):
                                 ansDict['id'] = student.student_number
                                 ansDict['name'] = student.user.name
                                 ansDict['gender'] = student.user.gender.name
+                                ansDict['account'] = student.user.username
                                 ansDict['user_status'] = student.user.user_status.name
                                 ans.append(ansDict)
             if (ans.__len__() <= items * (page - 1)):
