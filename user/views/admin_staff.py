@@ -7,7 +7,7 @@ from ..models import  Admin, Teacher
 
 class GetStaffListAPI(APIView):
     """
-    获取staff信息
+    获取staff列表信息
     """
     def get(self, request):
         admin = Admin.objects.all()
@@ -24,10 +24,21 @@ class GetStaffAPI(APIView):
     获取某staff信息
     """
     def get(self, request):
-        admin_id = request.GET.get('id')
-        admin = Admin.objects.get(id=admin_id)
-        admin_serializers = AdminSerializers(admin)
-        return self.success(admin_serializers.data)
+        try:
+            id = request.data.get('id')
+            role = request.data.get('role')
+            staff_id = request.data.get('staff')
+            if role == 'admin1':
+                admin = Admin.objects.get(admin_number=staff_id)
+                admin_serializers = AdminSerializers(admin)
+                return self.success(admin_serializers.data)             
+            else: 
+                teacher = Teacher.objects.get(admin_number=staff_id)
+                teacher_serializers = TeacherSerializers(admin)
+                return self.success(teacher_serializers.data)  
+        except Exception as exception:
+            return self.error(err=exception.args)
+
 
 
 
