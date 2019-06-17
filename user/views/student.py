@@ -1,10 +1,54 @@
+from utils.api import APIView, JSONResponse
+from rest_framework import status
+from django.http import HttpResponse, JsonResponse
+from course.models import Course
 import math
 from django.contrib.auth.models import Group
 from django.db.models import Model
-
 from utils.api import APIView, JSONResponse
-
 from ..models import Student,UserStatus,Gender,User
+from django.forms import model_to_dict
+
+class GetStudentAPI(APIView):
+    def get(self, request):
+        # get information from frontend #OK#
+        id_user = int(request.GET.get('id_user'))
+        NowStudent = Student.objects.get(user=id_user)
+        NowStudentResult = model_to_dict(NowStudent)
+        del NowStudentResult['followers']
+        del NowStudentResult['achievements']
+        return self.success(NowStudentResult)
+
+def LoginStudentAPI(APIView):
+    # Login API
+    def post(self, request):
+        studentName = request.GET.get('name')
+        studentPasswordHash = request.GET.get('password_hash')
+        studentUser = Student.objects.get(name=studentName)
+        if studentUser:
+            if studentUser.password_hash == studentPasswordHash:
+                return HttpResponse(status=0)
+            else:
+                return HttpResponse(status=1)
+        else:
+            return HttpResponse(status=-1)
+
+
+def GetStudentCourseAPI(APIView):
+    # Get Course of an Student
+    def get(self, request):
+        idStudent = int(request.GET.get('id_student'))
+        courseListID = CourseStudent.object.filter(id_student = idStudent)
+        courseList = []
+        for item in courseListID.data:
+            studentCourse = Course.object.get(id = item.id_course)
+            courseList.append(studentCourse)
+        courseListSerializer = CourseSerializers(courseList)
+        return JsonResponse(courseListSerializer.data,status=status.HTTP_200_OK)
+
+def GetMessageAPI(APiView):
+    pass
+
 
 
 
